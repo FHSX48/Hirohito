@@ -1,0 +1,20 @@
+-- Simple Fling Script
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Fling function
+local function fling()
+    -- Modify the force and direction of the fling as needed
+    local force = Instance.new("BodyVelocity")
+    force.MaxForce = Vector3.new(10000, 10000, 10000)
+    force.Velocity = Vector3.new(0, 500, 0) -- sets the direction and force
+    force.Parent = character.PrimaryPart
+end
+
+-- Trigger fling when mouse button is clicked
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        fling()  -- Fling happens when left mouse button is clicked
+    end
+end)
