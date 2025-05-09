@@ -1,0 +1,70 @@
+-- Hirohito Fling GUI
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+-- GUI creation
+local gui = Instance.new("ScreenGui", game.CoreGui)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.Active = true
+frame.Draggable = true
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+title.Text = "Hirohito Fling GUI"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 18
+
+local input = Instance.new("TextBox", frame)
+input.Position = UDim2.new(0, 10, 0, 40)
+input.Size = UDim2.new(1, -20, 0, 30)
+input.PlaceholderText = "Enter player name"
+input.Text = ""
+input.TextColor3 = Color3.new(1, 1, 1)
+input.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+input.ClearTextOnFocus = false
+
+local button = Instance.new("TextButton", frame)
+button.Position = UDim2.new(0, 10, 0, 85)
+button.Size = UDim2.new(1, -20, 0, 40)
+button.Text = "FLING"
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+
+button.MouseButton1Click:Connect(function()
+	local targetName = input.Text
+	local target = nil
+
+	for _, player in pairs(Players:GetPlayers()) do
+		if player.Name:lower():find(targetName:lower()) then
+			target = player
+			break
+		end
+	end
+
+	if not target or not target.Character then
+		warn("Target not found or no character.")
+		return
+	end
+
+	local targetHRP = target.Character:FindFirstChild("HumanoidRootPart")
+	if not targetHRP then return end
+
+	RunService.Stepped:Connect(function()
+		if targetHRP and hrp then
+			hrp.CFrame = targetHRP.CFrame
+			hrp.Velocity = Vector3.new(9999, 9999, 9999)
+			hrp.RotVelocity = Vector3.new(9999, 9999, 9999)
+		end
+	end)
+end)
